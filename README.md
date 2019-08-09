@@ -6,4 +6,14 @@
 [![GitHub issues](https://img.shields.io/github/issues/tyler-smith/env.svg)](https://github.com/tyler-smith/env/issues)
 
 
-Functions for easily extracting environment variables
+Functions for easily working with environment variables
+
+## Example
+```go
+func NewConfigFromEnv() Config {
+  return Config{
+    APIBindInterface: env.GetString("SEARCH_API_BIND_INTERFACE", "localhost:8080"),
+    MySQLDSN:  env.GetString("SEARCH_MYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
+    MaxThreads: env.GetInt("TESTAPP_MAX_THREADS"),
+  }
+```
