@@ -16,4 +16,5 @@ func NewConfigFromEnv() Config {
     MySQLDSN:  env.GetString("SEARCH_MYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
     MaxThreads: env.GetInt("TESTAPP_MAX_THREADS"),
   }
+}
 ```
