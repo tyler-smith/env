@@ -45,7 +45,7 @@ func GetBool(name string, defaultVal bool) (bool, error) {
 }
 
 // GetFloat64 gets the environment variable with the given name and parses it as
-// a float62.
+// a float64.
 func GetFloat64(name string, defaultVal float64) (float64, error) {
 	val := os.Getenv(name)
 	if val == "" {
@@ -55,7 +55,7 @@ func GetFloat64(name string, defaultVal float64) (float64, error) {
 }
 
 // GetFloat32 gets the environment variable with the given name and parses it as
-// a float62.
+// a float32.
 func GetFloat32(name string, defaultVal float32) (float32, error) {
 	val := os.Getenv(name)
 	if val == "" {
