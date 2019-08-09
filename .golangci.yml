@@ -1,0 +1,51 @@
+run:
+  skip-dirs:
+    - vendor
+    - pb
+
+issues:
+  max-per-linter: 999999
+  max-same: 999999
+  exclude:
+    - composite literal uses unkeyed fields
+
+linters-settings:
+  errcheck:
+    check-type-assertions: false
+    check-blank: false
+  unparam:
+    algo: cha
+    check-exported: false
+  nakedret:
+    max-func-lines: 0
+  misspell:
+    locale: US
+  goconst:
+    min-occurrences: 10
+  gocyclo:
+    min-complexity: 10
+  lll:
+    line-length: 80
+
+linters:
+  enable:
+    - gofmt
+    - golint
+    - govet
+    - goimports
+    - errcheck
+    - megacheck
+    - unconvert
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - unused
+    - unparam
+    - varcheck
+    - deadcode
+    - gosimple
+    - gocyclo
+    - nakedret
+    - lll
+    - goconst
+    - prealloc
