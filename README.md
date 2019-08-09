@@ -12,8 +12,8 @@ Functions for easily working with environment variables
 ```go
 func NewConfigFromEnv() Config {
   return Config{
-    APIBindInterface: env.GetString("SEARCH_API_BIND_INTERFACE", "localhost:8080"),
-    MySQLDSN:  env.GetString("SEARCH_MYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
+    APIBindInterface: env.GetString("TESTAPP_API_BIND_INTERFACE", "localhost:8080"),
+    MySQLDSN:  env.GetString("TESTAPPMYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
     MaxThreads: env.GetInt("TESTAPP_MAX_THREADS"),
   }
 }
