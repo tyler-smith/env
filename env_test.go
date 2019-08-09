@@ -11,141 +11,88 @@ import (
 	"time"
 )
 
-func cleanTestEnv() {
-	os.Unsetenv("ENV_TEST")
-}
-
 func TestGetString(t *testing.T) {
 	cleanTestEnv()
 
-	val := GetString("ENV_TEST", "default")
-	if val != "default" {
-		t.Fatal("Wanted: 'default' but got :", val)
-	}
-
+	assertEqual(t, "default", GetString("ENV_TEST", "default"))
 	os.Setenv("ENV_TEST", "not-default")
-
-	val = GetString("ENV_TEST", "not-default")
-	if val != "not-default" {
-		t.Fatal("Wanted: 'not-default' but got :", val)
-	}
+	assertEqual(t, "not-default", GetString("ENV_TEST", "not-default"))
 }
 
 func TestGetInt(t *testing.T) {
 	cleanTestEnv()
 
 	val, err := GetInt("ENV_TEST", 42)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 42 {
-		t.Fatal("Wanted: 'default' but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 42, val)
 
 	os.Setenv("ENV_TEST", strconv.Itoa(13))
 
 	val, err = GetInt("ENV_TEST", 42)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 13 {
-		t.Fatal("Wanted: 14 but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 13, val)
 }
 
 func TestGetInt64(t *testing.T) {
 	cleanTestEnv()
 
 	val, err := GetInt("ENV_TEST", 42)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 42 {
-		t.Fatal("Wanted: 'default' but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 42, val)
 
 	os.Setenv("ENV_TEST", strconv.Itoa(13))
 
 	val, err = GetInt("ENV_TEST", 42)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 13 {
-		t.Fatal("Wanted: 14 but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 13, val)
 }
 
 func TestGetBool(t *testing.T) {
 	cleanTestEnv()
 
 	val, err := GetBool("ENV_TEST", false)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val {
-		t.Fatal("Wanted false but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, false, val)
 
 	os.Setenv("ENV_TEST", "true")
 
 	val, err = GetBool("ENV_TEST", false)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if !val {
-		t.Fatal("Wanted: false but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, true, val)
 }
 
 func TestGetFloat64(t *testing.T) {
 	cleanTestEnv()
 
 	val, err := GetFloat64("ENV_TEST", 42.7)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 42.7 {
-		t.Fatal("Wanted: 'default' but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 42.7, val)
 
 	os.Setenv("ENV_TEST", strconv.FormatFloat(13.3, 'f', 12, 64))
 
 	val, err = GetFloat64("ENV_TEST", 42.7)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 13.3 {
-		t.Fatal("Wanted: 14 but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, 13.3, val)
 }
 
 func TestGetFloat32(t *testing.T) {
 	cleanTestEnv()
 
 	val, err := GetFloat32("ENV_TEST", 42.7)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 42.7 {
-		t.Fatal("Wanted: 'default' but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, float32(42.7), val)
 
 	os.Setenv("ENV_TEST", strconv.FormatFloat(13.3, 'f', 12, 32))
 
 	val, err = GetFloat32("ENV_TEST", 42.7)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if val != 13.3 {
-		t.Fatal("Wanted: 14 but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, float32(13.3), val)
 
 	// Now test an invalid float
 	os.Setenv("ENV_TEST", "asdf")
 	_, err = GetFloat32("ENV_TEST", 42.7)
-	if err == nil || !strings.Contains(err.Error(), "strconv.ParseFloat") {
-		t.Fatal("A parse error was expected but got:", err)
-	}
+	assertNotEqual(t, nil, err)
+	assertEqual(t, true, strings.Contains(err.Error(), "strconv.ParseFloat"))
 }
 
 func TestGetTimestamp(t *testing.T) {
@@ -153,26 +100,18 @@ func TestGetTimestamp(t *testing.T) {
 
 	time1 := time.Now()
 	time2, err := time.Parse(time.RFC3339, "2012-11-01T22:08:41+00:00")
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
+	assertEqual(t, nil, err)
 
 	val, err := GetTimestamp("ENV_TEST", time1)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
-	if !val.Equal(time1) {
-		t.Fatal("Wanted:", time1, "but got :", val)
-	}
+	assertEqual(t, nil, err)
+	assertEqual(t, time1, val)
 
 	os.Setenv("ENV_TEST", time1.Format(time.RFC3339))
 
 	val, err = GetTimestamp("ENV_TEST", time1)
-	if err != nil {
-		t.Fatal("No error was expected but got:", err)
-	}
+	assertEqual(t, nil, err)
 	if val.UTC().Equal(time2) {
-		t.Fatal("Wanted: 14 but got :", val)
+		t.Fatal("Wanted", time2, "but got:", time1)
 	}
 }
 
@@ -180,17 +119,29 @@ func TestGetStringSlice(t *testing.T) {
 	cleanTestEnv()
 
 	val := GetStringSlice("ENV_TEST", []string{"a", "b", "c"})
-	for i, v := range val {
-		if val[i] != v {
-			t.Fatal("Wanted:", val[i], "but got:", v)
-		}
+	for i, v := range []string{"a", "b", "c"} {
+		assertEqual(t, val[i], v)
 	}
 	os.Setenv("ENV_TEST", "x,y,z")
 
 	val = GetStringSlice("ENV_TEST", []string{"a", "b", "c"})
 	for i, v := range []string{"x", "y", "z"} {
-		if val[i] != v {
-			t.Fatal("Wanted:", val[i], "but got:", v)
-		}
+		assertEqual(t, val[i], v)
+	}
+}
+
+func cleanTestEnv() {
+	os.Unsetenv("ENV_TEST")
+}
+
+func assertEqual(t *testing.T, a interface{}, b interface{}) {
+	if a != b {
+		t.Fatal("Wanted:", a, "but got:", b)
+	}
+}
+
+func assertNotEqual(t *testing.T, a interface{}, b interface{}) {
+	if a == b {
+		t.Fatal("Wanted value to not be", a, "but it was")
 	}
 }
