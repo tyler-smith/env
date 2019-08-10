@@ -28,6 +28,8 @@ linters-settings:
     line-length: 80
 
 linters:
+  disable:
+    - typecheck # Produces false negatives
   enable:
     - gofmt
     - golint

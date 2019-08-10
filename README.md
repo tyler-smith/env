@@ -10,11 +10,24 @@ Functions for easily working with environment variables
 
 ## Example
 ```go
-func NewConfigFromEnv() Config {
-  return Config{
-    APIBindInterface: env.GetString("TESTAPP_API_BIND_INTERFACE", "localhost:8080"),
-    MySQLDSN:  env.GetString("TESTAPPMYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
-    MaxThreads: env.GetInt("TESTAPP_MAX_THREADS"),
-  }
+package main
+
+// Config represents the information needed to connected to your backing
+// services; layer IV of the 12 factor app.
+type Config struct {
+	APIBindInterface string
+	MySQLDSN         string
+	MaxThreads       string
 }
+
+// NewConfigFromEnv creates a new `Config` populated with information from the
+// local environment using the "env" lib
+func NewConfigFromEnv() Config {
+	return Config{
+		APIBindInterface: env.GetString("TESTAPP_API_BIND_INTERFACE", "localhost:8080"),
+		MySQLDSN:         env.GetString("TESTAPP_MYSQL_DSN", "root@tcp(localhost:3306)/yourdb"),
+		MaxThreads:       env.GetInt("TESTAPP_MAX_THREADS", 10),
+	}
+}
+
 ```
